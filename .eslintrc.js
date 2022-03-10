@@ -13,6 +13,7 @@ module.exports = {
     'no-unused-vars': 0,
     'no-useless-escape': 0,
     'vue/no-unused-components': 0,
+    'vue/multi-word-component-names': 0,
     'prettier/prettier': [
       1,
       {

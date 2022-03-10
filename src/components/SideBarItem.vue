@@ -1,15 +1,20 @@
 <template>
   <div class="m-2 max-w-[80px] text-center">
-    <div class="relative mx-auto" :class="sizeClassName">
-      <div class="shadow cursor-pointer" :class="[shapeClassName, shapeColor]"></div>
+    <div
+      class="relative mx-auto cursor-pointer"
+      :class="sizeClassName"
+      draggable="true"
+      @dragstart="handleDragStart"
+    >
+      <div class="shadow" :class="[shapeClassName, shapeColor]"></div>
       <p
         class="text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] text-3xl"
       >
-        <i :class="icon"></i>
+        <i :class="childDetail.icon"></i>
       </p>
     </div>
 
-    <p class="my-3">{{ name }}</p>
+    <p class="my-3">{{ childDetail.name }}</p>
   </div>
 </template>
 
@@ -17,9 +22,8 @@
 export default {
   props: {
     shape: String,
-    category: String,
-    icon: String,
-    name: String
+    type: String,
+    childDetail: { type: Object, required: true }
   },
   computed: {
     sizeClassName() {
@@ -41,7 +45,7 @@ export default {
       return 'rounded-full w-full h-full'
     },
     shapeColor() {
-      switch (this.category) {
+      switch (this.type) {
         case 'event':
           return 'bg-blue-300'
         case 'history':
@@ -59,6 +63,20 @@ export default {
         default:
           return 'bg-green-300'
       }
+    }
+  },
+  methods: {
+    handleDragStart(e) {
+      e.dataTransfer.setData(
+        'nodeData',
+        JSON.stringify({
+          shape: this.shape,
+          type: this.type,
+          ...this.childDetail
+        })
+      )
+      e.dataTransfer.effectAllowed = 'move'
+      e.dataTransfer.dropEffect = 'move'
     }
   }
 }
